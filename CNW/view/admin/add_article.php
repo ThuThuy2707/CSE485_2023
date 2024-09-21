@@ -31,7 +31,7 @@
                         <a class="nav-link " href="category.php">Thể loại</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="author.php">Tác giả</a>
+                        <a class="nav-link" href="author.php">Tác giả</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active fw-bold" href="article.php">Bài viết</a>
@@ -46,52 +46,17 @@
         <!-- <h3 class="text-center text-uppercase mb-3 text-primary">CẢM NHẬN VỀ BÀI HÁT</h3> -->
         <div class="row">
             <div class="col-sm">
-                <a href="add_article.php" class="btn btn-success">Thêm mới</a>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Mã bài viết</th>
-                            <th scope="col">Tiêu đề</th>
-                            <th scope="col">Tên bài hát</th>
-                            <th scope="col">Mã thể loại</th>
-                            <th scope="col">Tóm tắt</th>
-                            <th scope="col">Nội dung</th>
-                            <th scope="col">Mã tác giả</th>
-                            <th scope="col">Ngày viết</th>
-                            <th>Sửa</th>
-                            <th>Xóa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    include '../../config/DBconn.php';
-            
-                    $sql = "SELECT ma_bviet, tieude, ten_bhat, ma_tloai, tomtat, noidung, ma_tgia, ngayviet FROM baiviet";
-                    $result = $conn->query($sql);
-
-                        if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<th scope='row'>" . $row["ma_bviet"] . "</th>";
-                                echo "<td>" . $row["tieude"] . "</td>";
-                                echo "<td>" . $row["ten_bhat"] . "</td>";
-                                echo "<td>" . $row["ma_tloai"] . "</td>";
-                                echo "<td>" . $row["tomtat"] . "</td>";
-                                echo "<td>" . $row["noidung"] . "</td>";
-                                echo "<td>" . $row["ma_tgia"] . "</td>";
-                                echo "<td>" . $row["ngayviet"] . "</td>";
-                                echo "<td><a href='edit_article.php?id=" . $row["ma_bviet"] . "'><i class='fa-solid fa-pen-to-square'></i></a></td>";
-                                echo "<td><a href='delete_article.php?id=" . $row["ma_bviet"] . "'><i class='fa-solid fa-trash'></i></a></td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='4'>Không có dữ liệu</td></tr>";
-                        }
-                        $conn->close();
-                        ?>
-                       
-                    </tbody>
-                </table>
+                <h3 class="text-center text-uppercase fw-bold">Thêm mới bài viết</h3>
+                <form action="process_add_category.php" method="post">
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Tiêu đề</span>
+                        <input type="text" class="form-control" name="txtCatName" >
+                    </div>
+                    <div class="form-group  float-end ">
+                        <input type="submit" value="Thêm" class="btn btn-success">
+                        <a href="category.php" class="btn btn-warning ">Quay lại</a>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
