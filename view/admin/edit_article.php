@@ -1,3 +1,18 @@
+<?php
+include '../../config/DBconn.php';
+
+// Lấy mã thể loại
+$ma_bviet = $_GET['id'];
+
+//Lấy thông tin từ mã thể loại
+$sql = "SELECT * FROM baiviet where ma_bviet = '$ma_bviet'";
+
+//Thực thi lệnh
+$result = mysqli_query($conn, $sql);
+
+//Điền thông tin vào form
+$r = mysqli_fetch_assoc($result);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,69 +63,53 @@
             <div class="col-sm">
                 <h3 class="text-center text-uppercase fw-bold">Sửa thông tin bài viết</h3>
                 
-                <form action="process_add_category.php" method="post">
+                <form action="process_add_article.php" method="post">
 
-                <?php
-                    include '../../config/DBconn.php';
+                <?php if (!empty($error_message)) : ?>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <?php echo $error_message; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
 
-                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                        $ma_bviet = $_POST['txtCatId'];
-                        $tieude = $_POST['txtTitle'];
-                        $ten_bhat = $_POST['txtSongName'];
-                        $ma_tloai = $_POST['txtCategoryId'];
-                        $tomtat = $_POST['txtSummary'];
-                        $noidung = $_POST['txtContent'];
-                        $ma_tgia = $_POST['txtAuthorId'];
-                        $ngayviet = $_POST['txtDate'];
-
-                        $sql = "UPDATE baiviet SET tieude =  $tieude , ten_bhat=  $ten_bhat, ma_tloai= $ma_tloai, tomtat= $tomtat, noidung = $noidung, ma_tgia = $ma_tgia, ngayviet =$ngayviet WHERE ma_bviet=$ma_bviet";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("ssisssi", $tieude, $ten_bhat, $ma_tloai, $tomtat, $noidung, $ma_tgia, $ngayviet, $ma_bviet);
-
-                        if ($stmt->execute()) {
-                            echo "Cập nhật thành công!";
-                        } else {
-                            echo "Lỗi: " . $stmt->error;
-                        }
-
-                        $stmt->close();
-                        $conn->close();
-                    }
-                    ?>
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Mã bài viết</span>
+                        <input type="text" class="form-control" name="txtID" readonly = "true" value="<?php echo $r['ma_bviet']; ?>">
+                    </div>
 
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatName">Tiêu đề</span>
-                        <input type="text" class="form-control" name="txtCatName" >
+                        <input type="text" class="form-control" name="txtTieuDe" value="<?php echo $r['tieude']; ?>">
                     </div>
 
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatName">Tên bài hát</span>
-                        <input type="text" class="form-control" name="txtCatName">
+                        <input type="text" class="form-control" name="txtTenBaiHat" value="<?php echo $r['ten_bhat']; ?>">
                     </div>
 
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatId">Mã thể loại</span>
-                        <input type="text" class="form-control" name="txtCatId" >
+                        <input type="text" class="form-control" name="txtMaTheLoai" value="<?php echo $r['ma_tloai']; ?>">
                     </div>
 
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatName">Tóm tắt</span>
-                        <input type="text" class="form-control" name="txtCatName" >
+                        <input type="text" class="form-control" name="txtTomTat" value="<?php echo $r['tomtat']; ?>">
                     </div>
 
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatName">Nội dung</span>
-                        <input type="text" class="form-control" name="txtContent" >
+                        <input type="text" class="form-control" name="txtNoiDung" value="<?php echo $r['noidung']; ?>">
                     </div>
 
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatId">Mã tác giả</span>
-                        <input type="text" class="form-control" name="txtCatId">
+                        <input type="text" class="form-control" name="txtTacGia" value="<?php echo $r['ma_tgia']; ?>">
                     </div>
 
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatId">Ngày viết</span>
-                        <input type="text" class="form-control" name="Datetime">
+                        <input type="text" class="form-control" name="txtNgayViet" value="<?php echo $r['ngayviet']; ?>">
                     </div>
 
                     <div class="form-group  float-end ">

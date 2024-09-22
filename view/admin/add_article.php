@@ -1,3 +1,45 @@
+<?php
+include '../../config/DBconn.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Lấy dữ liệu từ form
+    $ma_bviet = $_POST['txtID'];
+    $tieude = $_POST['txtTieuDe'];
+    $ten_bhat = $_POST['txtTenBaiHat'];
+    $ma_tloai = $_POST['txtMaTheLoai'];
+    $tomtat = $_POST['txtTomTat'];
+    $noidung = $_POST['txtNoiDung'];
+    $ma_tgia = $_POST['txtTacGia'];
+    $ngayviet = $_POST['txtNgayViet'];
+
+    // Kiểm tra xem tên thể loại có rỗng không
+    if (empty($ma_bviet) || empty($tieude) || empty($ten_bhat) || empty($ma_tloai) || empty($tomtat) || empty($noidung) || empty($ma_tgia) || empty($ngayviet) ) {
+        $message = "Vui lòng nhập thông tin!";
+    } else {
+        // Kiểm tra xem ma_tloai đã tồn tại hay chưa
+        $checkSql = "SELECT * FROM baiviet WHERE ma_bviet = '$ma_bviet'";
+        $result = $conn->query($checkSql);
+
+        if ($result->num_rows > 0) {
+            $message = "Mã thể loại đã tồn tại. Vui lòng nhập mã khác!";
+        } else {
+            // Chuẩn bị câu truy vấn để thêm thể loại mới
+            $sql = "INSERT INTO baiviet (ma_bviet, tieude, ten_bhat, ma_tloai, tomtat, noidung, ma_tgia, ngayviet) VALUES ('$ma_bviet', '$tieude', '$ten_bhat', '$ma_tloai', '$tomtat', '$noidung', '$ma_tgia', '$ngayviet')";
+
+            // Thực thi câu truy vấn
+            if ($conn->query($sql) === TRUE) {
+                $message = "Thêm thể loại thành công!";
+            } else {
+                $message = "Lỗi: " . $sql . "<br>" . $conn->error;
+            }
+        }
+
+        // Đóng kết nối
+        $conn->close();
+    }
+    header('Location: article.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,18 +86,61 @@
     </header>
     <main class="container mt-5 mb-5">
         <!-- <h3 class="text-center text-uppercase mb-3 text-primary">CẢM NHẬN VỀ BÀI HÁT</h3> -->
+        <?php if (!empty($message)): ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <?php echo $message; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
         <div class="row">
             <div class="col-sm">
                 <h3 class="text-center text-uppercase fw-bold">Thêm mới bài viết</h3>
-                <form action="process_add_category.php" method="post">
+                <form action="add_article.php" method="post">
                     <div class="input-group mt-3 mb-3">
-                        <span class="input-group-text" id="lblCatName">Tiêu đề</span>
-                        <input type="text" class="form-control" name="txtCatName" >
+                        <span class="input-group-text" id="lblCatName">Mã bài viết</span>
+                        <input type="text" class="form-control" name="txtID" >
                     </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Tiêu đề </span>
+                        <input type="text" class="form-control" name="txtTieuDe" >
+                    </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Tên bài hát</span>
+                        <input type="text" class="form-control" name="txtTenBaiHat" >
+                    </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Mã thể loại</span>
+                        <input type="text" class="form-control" name="txtMaTheLoai" >
+                    </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Tóm tắt</span>
+                        <input type="text" class="form-control" name="txtTomTat" >
+                    </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Nội dung</span>
+                        <input type="text" class="form-control" name="txtNoiDung" >
+                    </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Mã tác giả</span>
+                        <input type="text" class="form-control" name="txtTacGia" >
+                    </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Ngày viết</span>
+                        <input type="text" class="form-control" name="txtNgayViet" >
+                    </div>
+
                     <div class="form-group  float-end ">
                         <input type="submit" value="Thêm" class="btn btn-success">
                         <a href="category.php" class="btn btn-warning ">Quay lại</a>
                     </div>
+
                 </form>
             </div>
         </div>
