@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 include '../../config/DBconn.php';
 // Khởi tạo thông báo lỗi
 $error_msg = "";
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
-?>
+?> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,3 +1,19 @@
+<?php
+include '../../config/DBconn.php';
+
+// Lấy mã thể loại
+$ma_tloai = $_GET['id'];
+
+//Lấy thông tin từ mã thể loại
+$sql = "SELECT * FROM theloai where ma_tloai = '$ma_tloai'";
+
+//Thực thi lệnh
+$result = mysqli_query($conn, $sql);
+
+//Điền thông tin vào form
+$r = mysqli_fetch_assoc($result);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,15 +63,24 @@
         <div class="row">
             <div class="col-sm">
                 <h3 class="text-center text-uppercase fw-bold">Sửa thông tin thể loại</h3>
+
                 <form action="process_add_category.php" method="post">
+
+                <?php if (!empty($error_message)) : ?>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <?php echo $error_message; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
                 <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatId">Mã thể loại</span>
-                        <input type="text" class="form-control" name="txtCatId" readonly value="1">
+                        <input type="text" class="form-control" name="txtId" readonly = "true" value="<?php echo $r['ma_tloai']; ?>">
                     </div>
 
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatName">Tên thể loại</span>
-                        <input type="text" class="form-control" name="txtCatName" value = "Nhạc trữ tình">
+                        <input type="text" class="form-control" name="txtCatName" value="<?php echo htmlspecialchars($r['ten_tloai']); ?>">
                     </div>
 
                     <div class="form-group  float-end ">

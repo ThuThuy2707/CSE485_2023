@@ -1,8 +1,39 @@
-<?php 
-    include '../../config/DBconn.php';
+<?php
+include '../../config/DBconn.php';
 
-    
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Lấy dữ liệu từ form
+    $ma_tloai = $_POST['txtID'];
+    $ten_tloai = $_POST['txtCatName'];
+
+    // Kiểm tra xem tên thể loại có rỗng không
+    if (empty($ten_tloai)) {
+        $message = "Vui lòng nhập tên thể loại!";
+    } else {
+        // Kiểm tra xem ma_tloai đã tồn tại hay chưa
+        $checkSql = "SELECT * FROM theloai WHERE ma_tloai = '$ma_tloai'";
+        $result = $conn->query($checkSql);
+
+        if ($result->num_rows > 0) {
+            $message = "Mã thể loại đã tồn tại. Vui lòng nhập mã khác!";
+        } else {
+            // Chuẩn bị câu truy vấn để thêm thể loại mới
+            $sql = "INSERT INTO theloai (ma_tloai, ten_tloai) VALUES ('$ma_tloai', '$ten_tloai')";
+
+            // Thực thi câu truy vấn
+            if ($conn->query($sql) === TRUE) {
+                $message = "Thêm thể loại thành công!";
+            } else {
+                $message = "Lỗi: " . $sql . "<br>" . $conn->error;
+            }
+        }
+
+        // Đóng kết nối
+        $conn->close();
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,10 +80,21 @@
     </header>
     <main class="container mt-5 mb-5">
         <!-- <h3 class="text-center text-uppercase mb-3 text-primary">CẢM NHẬN VỀ BÀI HÁT</h3> -->
+        <?php if (!empty($message)): ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <?php echo $message; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+        
         <div class="row">
             <div class="col-sm">
                 <h3 class="text-center text-uppercase fw-bold">Thêm mới thể loại</h3>
-                <form action="process_add_category.php" method="post">
+                <form action="add_category.php" method="post">
+                <div class="input-group mt-3 mb-3">
+                    <span class="input-group-text" id="lblCatID">Mã thể loại</span>
+                    <input type="text" class="form-control" name="txtID" required>
+                </div>
                     <div class="input-group mt-3 mb-3">
                         <span class="input-group-text" id="lblCatName">Tên thể loại</span>
                         <input type="text" class="form-control" name="txtCatName" >
