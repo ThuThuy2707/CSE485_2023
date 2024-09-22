@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2024 at 05:30 PM
+-- Generation Time: Sep 22, 2024 at 09:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -132,6 +132,28 @@ INSERT INTO `theloai` (`ma_tloai`, `ten_tloai`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `username` varchar(20) NOT NULL,
+  `user_password` varchar(30) NOT NULL,
+  `name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `user_password`, `name`) VALUES
+(1, 'dttthuy', 'thuy123', 'Đặng Thị Thu Thủy'),
+(2, 'txhuy', 'xhuy123', 'Thân Xuân Huy'),
+(3, 'nvthanh', 'nvthanh04', 'Nguyễn Văn Thanh');
+
+-- --------------------------------------------------------
+
+--
 -- Stand-in structure for view `vw_music`
 -- (See below for the actual view)
 --
@@ -175,6 +197,12 @@ ALTER TABLE `tacgia`
 --
 ALTER TABLE `theloai`
   ADD PRIMARY KEY (`ma_tloai`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Constraints for dumped tables

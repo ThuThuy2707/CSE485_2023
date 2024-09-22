@@ -1,30 +1,3 @@
-<!-- <?php
-include '../../config/DBconn.php';
-// Khởi tạo thông báo lỗi
-$error_msg = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Kiểm tra xem cả username và password đã được gửi từ form chưa
-    if (isset($_POST['username']) && isset($_POST['password'])) {
-        $user = $_POST['username'];
-        $pass = $_POST['password'];
-
-        // Truy vấn cơ sở dữ liệu để kiểm tra thông tin đăng nhập
-        $sql = "SELECT * FROM users WHERE username = '$user' AND password = '$pass'";
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-            // Đăng nhập thành công
-            header("Location: index.php"); // Điều hướng đến trang chủ
-            exit();
-        } else {
-            $error_msg = "Tên đăng nhập hoặc mật khẩu không đúng!";
-        }
-    }
-}
-
-$conn->close();
-?> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,8 +37,10 @@ $conn->close();
                 </div>
             </div>
         </nav>
+
     </header>
     <main class="container mt-5 mb-5">
+        <!-- <h3 class="text-center text-uppercase mb-3 text-primary">CẢM NHẬN VỀ BÀI HÁT</h3> -->
         <div class="d-flex justify-content-center h-100">
                 <div class="card">
                     <div class="card-header">
@@ -77,15 +52,21 @@ $conn->close();
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="">
+                        <form action="edit_login.php" method="POST">
+                        <?php if (!empty($error_msg)): ?>
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <?php echo $error_msg; ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            <?php endif; ?>
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="txtUser"><i class="fas fa-user"></i></span>
-                                <input type="text" class="form-control" name="username" placeholder="username" required>
+                                <input type="text" class="form-control" placeholder="username" name="username">
                             </div>
 
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="txtPass"><i class="fas fa-key"></i></span>
-                                <input type="password" class="form-control" name="password" placeholder="password" required>
+                                <input type="password" class="form-control" placeholder="password" name="password">
                             </div>
                             
                             <div class="row align-items-center remember">
@@ -94,24 +75,21 @@ $conn->close();
                             <div class="form-group">
                                 <input type="submit" value="Login" class="btn float-end login_btn">
                             </div>
-                            <!-- Hiển thị thông báo lỗi nếu có -->
-                            <?php if (!empty($error_msg)) : ?>
-                                <div class="alert alert-danger mt-3"><?php echo $error_msg; ?></div>
-                            <?php endif; ?>
                         </form>
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-center ">
-                            Don't have an account?<a href="#" class="text-warning text-decoration-none">Sign Up</a>
+                            Don't have an account?<a href="" class="text-warning text-decoration-none">Sign Up</a>
                         </div>
                         <div class="d-flex justify-content-center">
                             <a href="#" class="text-warning text-decoration-none">Forgot your password?</a>
                         </div>
                     </div>
                 </div>
+
         </div>
     </main>
-    <footer class="bg-white d-flex justify-content-center align-items-center border-top border-secondary border-2" style="height:80px">
+    <footer class="bg-white d-flex justify-content-center align-items-center border-top border-secondary  border-2" style="height:80px">
         <h4 class="text-center text-uppercase fw-bold">TLU's music garden</h4>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>

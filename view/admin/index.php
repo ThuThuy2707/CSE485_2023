@@ -1,3 +1,27 @@
+<?php
+include '../../config/DBconn.php'; // Kết nối CSDL
+
+// Đếm số lượng thể loại
+$sql_theloai = "SELECT COUNT(ma_tloai) AS count_theloai FROM theloai";
+$result_theloai = $conn->query($sql_theloai);
+$count_theloai = $result_theloai->fetch_assoc()['count_theloai'];
+
+// Đếm số lượng tác giả
+$sql_tacgia = "SELECT COUNT(ma_tgia) AS count_tacgia FROM tacgia";
+$result_tacgia = $conn->query($sql_tacgia);
+$count_tacgia = $result_tacgia->fetch_assoc()['count_tacgia'];
+
+// Đếm số lượng bài viết
+$sql_baiviet = "SELECT COUNT(ma_bviet) AS count_baiviet FROM baiviet";
+$result_baiviet = $conn->query($sql_baiviet);
+$count_baiviet = $result_baiviet->fetch_assoc()['count_baiviet'];
+
+ //Đếm số lượng người dùng (Giả sử bạn có bảng 'users')
+$sql_users = "SELECT COUNT(id) AS count_users FROM user";
+$result_users = $conn->query($sql_users);
+$count_users = $result_users->fetch_assoc()['count_users'];
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,7 +77,7 @@
                         </h5>
 
                         <h5 class="h1 text-center">
-                            110
+                            <?php echo $count_users; ?> 
                         </h5>
                     </div>
                 </div>
@@ -66,8 +90,8 @@
                             <a href="" class="text-decoration-none">Thể loại</a>
                         </h5>
 
-                        <h5 class="h1 text-center">
-                            10
+                        <h5 class="h1 text-center"> 
+                            <?php echo $count_theloai; ?> 
                         </h5>
                     </div>
                 </div>
@@ -81,7 +105,7 @@
                         </h5>
 
                         <h5 class="h1 text-center">
-                            20
+                            <?php echo $count_tacgia; ?> 
                         </h5>
                     </div>
                 </div>
@@ -95,7 +119,7 @@
                         </h5>
 
                         <h5 class="h1 text-center">
-                            110
+                            <?php echo $count_baiviet; ?> 
                         </h5>
                     </div>
                 </div>
