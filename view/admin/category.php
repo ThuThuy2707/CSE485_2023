@@ -78,6 +78,21 @@
                         $conn->close();
                         ?>
                        
+                       <?php
+                           if (isset($_GET['message'])) {
+                                if ($_GET['message'] == 'success') {
+                                    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                            Xóa thể loại thành công!
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                        </div>";
+                                } else if ($_GET['message'] == 'error') {
+                                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                            Không thể xóa thể loại vì vẫn còn bài viết liên kết với tác giả này.
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                        </div>";
+                                }
+                            }
+                        ?>
                     </tbody>
                 </table>
             </div>
