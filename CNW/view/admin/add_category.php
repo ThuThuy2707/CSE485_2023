@@ -1,3 +1,8 @@
+<?php 
+    include '../../config/DBconn.php';
+
+    
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
