@@ -1,3 +1,19 @@
+<?php
+include '../../config/DBconn.php';
+
+// Lấy mã thể loại
+$ma_tgia = $_GET['id'];
+
+//Lấy thông tin từ mã thể loại
+$sql = "SELECT * FROM tacgia where ma_tgia = '$ma_tgia'";
+
+//Thực thi lệnh
+$result = mysqli_query($conn, $sql);
+
+//Điền thông tin vào form
+$r = mysqli_fetch_assoc($result);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +50,7 @@
                         <a class="nav-link active fw-bold" href="author.php">Tác giả</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="article.php">Bài viết</a>
+                        <a class="nav-link" href="article.php">Bài viết</a>
                     </li>
                 </ul>
                 </div>
@@ -46,40 +62,32 @@
         <!-- <h3 class="text-center text-uppercase mb-3 text-primary">CẢM NHẬN VỀ BÀI HÁT</h3> -->
         <div class="row">
             <div class="col-sm">
-                <a href="add_author.php" class="btn btn-success">Thêm mới</a>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Mã tác giả</th>
-                            <th scope="col">Tên tác giả</th>
-                            <th>Sửa</th>
-                            <th>Xóa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    include '../../config/DBconn.php';
-            
-                    $sql = "SELECT ma_tgia,ten_tgia FROM tacgia";
-                    $result = $conn->query($sql);
+                <h3 class="text-center text-uppercase fw-bold">Sửa thông tin tác giả</h3>
 
-                        if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<th scope='row'>" . $row["ma_tgia"] . "</th>";
-                                echo "<td>" . $row["ten_tgia"] . "</td>";
-                                echo "<td><a href='edit_author.php?id=" . $row["ma_tgia"] . "'><i class='fa-solid fa-pen-to-square'></i></a></td>";
-                                echo "<td><a href='delete_author.php?id=" . $row["ma_tgia"] . "'><i class='fa-solid fa-trash'></i></a></td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='4'>Không có dữ liệu</td></tr>";
-                        }
-                        $conn->close();
-                        ?>
-                       
-                    </tbody>
-                </table>
+                <form action="process_add_author.php" method="post">
+
+                <?php if (!empty($error_message)) : ?>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <?php echo $error_message; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
+                <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatId">Mã tác giả</span>
+                        <input type="text" class="form-control" name="txtId" readonly = "true" value="<?php echo $r['ma_tgia']; ?>">
+                    </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Tên tác giả</span>
+                        <input type="text" class="form-control" name="txtCatName" value="<?php echo htmlspecialchars($r['ten_tgia']); ?>">
+                    </div>
+
+                    <div class="form-group  float-end ">
+                        <input type="submit" value="Lưu lại" class="btn btn-success">
+                        <a href="category.php" class="btn btn-warning ">Quay lại</a>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
