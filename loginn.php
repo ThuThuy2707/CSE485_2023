@@ -1,54 +1,3 @@
-<?php
-$error_msg = ''; // Biến để chứa thông báo lỗi
-
-// Kết nối đến cơ sở dữ liệu
-$conn = new mysqli("localhost", "root", "", "btth01_cse485"); // Thay đổi theo cấu hình của bạn
-
-if ($conn->connect_error) {
-    die("Kết nối thất bại: " . $conn->connect_error);
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // Điều kiện kiểm tra định dạng tên người dùng và mật khẩu (bạn có thể giữ lại phần regex ở đây)
-    $username_regex = '/^[a-zA-Z0-9._]{5,20}$/';
-    $password_regex = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&*!?])[A-Za-z\d@$!%*?&]{8,}$/';
-
-    if (!preg_match($username_regex, $username)) {
-        $error_msg = 'Tên đăng nhập không đúng định dạng';
-    } elseif (!preg_match($password_regex, $password)) {
-        $error_msg = 'Mật khẩu không đúng định dạng';
-    } else {
-        // Truy vấn cơ sở dữ liệu để kiểm tra username
-        $sql = "SELECT password FROM users WHERE username = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            // Lấy thông tin mật khẩu từ cơ sở dữ liệu
-            $row = $result->fetch_assoc();
-            $hashed_password = $row['password'];
-
-            // Kiểm tra mật khẩu (dùng password_verify nếu mật khẩu đã mã hóa)
-            if (password_verify($password, $hashed_password)) {
-                $error_msg = 'Bạn đã đăng nhập thành công';
-            } else {
-                $error_msg = 'Tên đăng nhập hoặc mật khẩu không đúng';
-            }
-        } else {
-            $error_msg = 'Tên đăng nhập hoặc mật khẩu không đúng';
-        }
-
-        $stmt->close();
-    }
-}
-
-$conn->close();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,7 +7,7 @@ $conn->close();
     <title>Music for Life</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="css/style_login.css">
+    <link rel="stylesheet" href="view/css/style_login.css">
 </head>
 <body>
     <header>
@@ -78,7 +27,7 @@ $conn->close();
                     <a class="nav-link" aria-current="page" href="./">Trang chủ</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link active" href="./login.php">Đăng nhập</a>
+                    <a class="nav-link active" href="./loginn.php">Đăng nhập</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -103,13 +52,22 @@ $conn->close();
                 </div>
                 <div class="card-body">
                     <form action="edit_login.php" method="POST">
-                        <!-- Hiển thị thông báo lỗi hoặc thành công -->
-                        <?php if (!empty($error_msg)): ?>
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <?php echo $error_msg; ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        <?php endif; ?>
+                    <?php
+                           if (isset($_GET['message'])) {
+                                if ($_GET['message'] == 'error1') {
+                                    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                            Đăng nhập sai thông tin!
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                        </div>";
+                                } else if ($_GET['message'] == 'error2') {
+                                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                            Vui lòng nhập đầy đủ thông tin!
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                        </div>";
+                                }
+                            }
+                        ?>
+
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="txtUser"><i class="fas fa-user"></i></span>
                             <input type="text" class="form-control" placeholder="username" name="username">
